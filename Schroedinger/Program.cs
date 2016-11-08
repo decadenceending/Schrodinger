@@ -17,14 +17,16 @@ namespace Schroedinger
         /// Define the choice of basis set function
         
         /// Define Wave Function
-        public double WaveFunction(float B, int n, float x)
+        public double WaveFunction(double B, int n, float x)
         {
             return B*Math.Sin(n*x*Math.PI);
         }
         static void Main(string[] args)
         {
-            int y = 2;
-            double x = new SchroedingerPgm().WaveFunction(y);
+            int n = 1; ///Depends on energy level
+            double B = (Math.PI) / 2; ///For Example
+            float x = 2;
+            double Psi = new SchroedingerPgm().WaveFunction(B,n,x);
         }
     }
 }
