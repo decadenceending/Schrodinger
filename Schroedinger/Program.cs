@@ -22,8 +22,12 @@ namespace Schroedinger
 
 
             ///Prompt user to pick basis set
-            
-            choice = Console.Read();
+
+            Console.WriteLine("Please select your basis set of choice: 1 for Legendre, 2 for Fourier:");
+            int choice = Convert.ToInt32(Console.ReadLine());
+            int choiceadv = choice * 2;
+            Console.WriteLine(choiceadv);
+            Console.ReadLine();
 
             if (choice == 1)
             {
