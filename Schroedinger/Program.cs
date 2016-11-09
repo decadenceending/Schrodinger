@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Schroedinger
+namespace Schrodinger
 {
-    class SchroedingerPgm
+    class SchrodingerPgm
     {
         /// Define the potential energy V(X)
 
@@ -16,7 +16,7 @@ namespace Schroedinger
 
         /// Define the choice of basis set function
         
-        public int[] BasisSet(int choice)
+        public int[] BasisSet()
         {
             int[] Basis = new int[2];
 
@@ -56,7 +56,7 @@ namespace Schroedinger
             int n = 1; ///Depends on energy level
             double B = (Math.PI) / 2; ///For Example
             float x = 2;
-            double Psi = new SchroedingerPgm().WaveFunction(B,n,x);
+            double Psi = new SchrodingerPgm().WaveFunction(B,n,x);
         }
     }
 }
