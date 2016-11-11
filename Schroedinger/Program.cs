@@ -59,16 +59,33 @@ namespace Schrodinger
         }
 
         /// Define Wave Function
+        
         public double WaveFunction(double B, int n, double x)
         {
             return B*Math.Sin(n*x*Math.PI);
         }
 
         ///Define Hamiltonian
-        public void Hamiltonian()
+        public double[] Hamiltonian()
         {
+
+            double[] Laplacian = { };
             return -c * Laplacian + V_0;
         }
+        ///Defining array of complex numbers
+        
+
+        public int[] HamiltonianCoeff(double[] aicoeff, int[] bicoeff, int[] Hamiltonian)
+        {
+            double img = Math.Sqrt(-1);
+
+            aicoeff =[ 1 + img, 3 * img, 2, 3 + img, 5 + 3 * img, 2 + 3 * img, 7, 1 + 3 * img, 5 + img, 9 + img, 7 * img, 3, 8, 4 + 9 * img, 2 + 8 * img];
+            
+            int[] HamPsi[i] = (Hamiltonian[i] * bicoeff[i]) * aicoeff;
+
+            return HamPsi;
+        }
+            
 
         static void Main(string[] args)
         {
