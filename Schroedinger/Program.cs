@@ -80,9 +80,11 @@ namespace Schrodinger
             double img = Math.Sqrt(-1);
 
             aicoeff =[ 1 + img, 3 * img, 2, 3 + img, 5 + 3 * img, 2 + 3 * img, 7, 1 + 3 * img, 5 + img, 9 + img, 7 * img, 3, 8, 4 + 9 * img, 2 + 8 * img];
-            
-            int[] HamPsi[i] = (Hamiltonian[i] * bicoeff[i]) * aicoeff;
 
+            for (int i = bsize; i <= bsize;i++)
+            {
+                int[] HamPsi[i] = (Hamiltonian[i] * bicoeff[i]) * aicoeff;
+            }
             return HamPsi;
         }
             
