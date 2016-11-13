@@ -16,17 +16,31 @@ namespace Schrodinger
 
         double c;
 
-        /// Define Legendre polynomial coefficients
-
-        int[] basis_legendre = { 1, 1, -1, 3, -3, 5, 3, -30, 35, 15, -70, 63, -5, 105, -315, 231, -35, 315, -693, 429, 35, -1260, 6930, -12012, 6435, 315,
-            -4620, 18018, -25740, 12155, -63, 3465, -30030, 90090, -109395, 46189, -693, 15015, -90090, 218790, -230945, 88179, 231, -18018, 225225, -1021020, 2078505, -1939938, 676039 };
+        ///int[] basis_legendre = { 1, 1, -1, 3, -3, 5, 3, -30, 35, 15, -70, 63, -5, 105, -315, 231, -35, 315, -693, 429, 35, -1260, 6930, -12012, 6435, 315,
+        ///    -4620, 18018, -25740, 12155, -63, 3465, -30030, 90090, -109395, 46189, -693, 15015, -90090, 218790, -230945, 88179, 231, -18018, 225225, -1021020, 2078505, -1939938, 676039 };
 
         /// Define the choice of basis set function
 
         public int[] BasisSet()
         {
-            int[] Basis = new int[2];
+            ///Define Legendre coefficients from n=0 to n=12
+            
+            int[][] basis_legendre_all = {
+                new int[] {1},
+                new int[] {1},
+                new int[] {-1,3},
+                new int[] {-3, 5},
+                new int[] {3, -30, 35},
+                new int[] {15, -70, 63},
+                new int[] {-5, 105, -315, 231},
+                new int[] {-35, 315, -693, 429},
+                new int[] {35, -1260, 6930, -12012, 6435},
+                new int[] {315,-4620, 18018, -25740, 12155},
+                new int[] {-63, 3465, -30030, 90090, -109395, 46189},
+                new int[] {-693, 15015, -90090, 218790, -230945, 88179},
+                new int[] {231, -18018, 225225, -1021020, 2078505, -1939938, 676039}
 
+            };
 
             ///Prompt user to pick basis set
 
@@ -44,18 +58,15 @@ namespace Schrodinger
 
             if (choice == 1)
             {
-                Basis = new int[2]
-
-                { 1, 3};
+                int[] Basis = basis_legendre_all[bsize];
+                return Basis;
             }
             else if (choice==2)
             {
-                Basis = new int[2] 
+                int[] Basis = new int[2];
+                return Basis;
 
-                { 2, 4};
             }
-
-            return Basis;
         }
 
         /// Define Wave Function
