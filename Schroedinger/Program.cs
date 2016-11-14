@@ -6,8 +6,26 @@ using System.Threading.Tasks;
 
 namespace Schrodinger
 {
-    class SchrodingerPgm
+
+    public class SchrodingerPgm
     {
+        ///Declare the necessary variables
+
+        ///Choice, which is determined by user input,1=legendre, 2=Fourier
+        
+        int choice;
+
+        ///Number of terms for a Legendre Polynomial, determined by user input
+
+        int bsize;
+
+        ///Result of selecting Legendre polynomial and assigning a coefficient set, 
+        ///corresponding to the selected number of terms
+
+        int[] Basis;
+
+        int ecount;
+
         /// Define the potential energy V_0
 
         double V_0 = 1.5;
@@ -16,10 +34,13 @@ namespace Schrodinger
 
         double c;
 
-        ///int[] basis_legendre = { 1, 1, -1, 3, -3, 5, 3, -30, 35, 15, -70, 63, -5, 105, -315, 231, -35, 315, -693, 429, 35, -1260, 6930, -12012, 6435, 315,
-        ///    -4620, 18018, -25740, 12155, -63, 3465, -30030, 90090, -109395, 46189, -693, 15015, -90090, 218790, -230945, 88179, 231, -18018, 225225, -1021020, 2078505, -1939938, 676039 };
+        ///Set of coefficients output by applying the laplacian
 
-        /// Define the choice of basis set function
+        int[] bicoeff;
+
+        int[] HamPsi;
+
+        /// Define the choice of basis set and size
 
         public int[] BasisSet()
         {
@@ -47,26 +68,43 @@ namespace Schrodinger
             Console.WriteLine("Please select your basis set of choice: 1 for Legendre, 2 for Fourier:");
             int choice = Convert.ToInt32(Console.ReadLine());
 
-            /// Define the size of the basis set
+            ///Define the size of the basis set
 
-            Console.WriteLine("Please speciofy the number of terms for your basis set:");
-            int bsize = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Please speciofy the number of terms for your basis set (0<=n<=12):");
+            bsize = Convert.ToInt32(Console.ReadLine());
 
             ///Keep Console open, until user chooses to close it
 
             Console.ReadLine();
 
+            int[] Basis = { };
+
             if (choice == 1)
             {
-                int[] Basis = basis_legendre_all[bsize];
-                return Basis;
+                ///Assigns basis set based on user input of number of terms to use
+                ///The values are taken from the universal legendre coefficients set, basis_legendre_all (jagged array)
+
+                Basis = basis_legendre_all[bsize];
             }
             else if (choice==2)
             {
-                int[] Basis = new int[2];
-                return Basis;
+                Basis = new int[2];
 
             }
+
+            Array.Reverse(Basis);
+            return Basis;
+        }
+
+        ///Finding Lapacian of a basis set
+        
+        public int[] BasisLaplacian(int Basi,int ecount)
+        {
+            for (ecount=0; ecount<Basis.Length; ecount++)
+            {
+                bicoeff[ecount] = Basis[ecount] * (bsize - 2 * ecount) * (bsize - 2 * ecount - 1);
+            }
+            return bicoeff;
         }
 
         /// Define Wave Function
@@ -90,11 +128,11 @@ namespace Schrodinger
         {
             double img = Math.Sqrt(-1);
 
-            aicoeff =[ 1 + img, 3 * img, 2, 3 + img, 5 + 3 * img, 2 + 3 * img, 7, 1 + 3 * img, 5 + img, 9 + img, 7 * img, 3, 8, 4 + 9 * img, 2 + 8 * img];
+            aicoeff =[1 + img, 3 * img, 2, 3 + img, 5 + 3 * img, 2 + 3 * img, 7, 1 + 3 * img, 5 + img, 9 + img, 7 * img, 3, 8, 4 + 9 * img, 2 + 8 * img];
 
             for (int i = bsize; i <= bsize;i++)
             {
-                int[] HamPsi[i] = (Hamiltonian[i] * bicoeff[i]) * aicoeff;
+                HamPsi[i] = (Hamiltonian[i] * bicoeff[i]) * aicoeff[i];
             }
             return HamPsi;
         }
