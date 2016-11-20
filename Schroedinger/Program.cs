@@ -24,8 +24,6 @@ namespace Schrodinger
 
         double[] Basis_Init;
 
-        double[,] Basis_InitF;
-
         ///Coefficients set and V_0(x), defining the Hamiltonian
 
         double[] Basis_Temp;
@@ -34,9 +32,6 @@ namespace Schrodinger
 
         int ecount;
 
-        ///Need to declare this variable which is a result of converting ecount as a double to integer, to be able to call elements in array
-
-        int arrayi;
 
         /// Define the potential energy V_0
 
@@ -109,7 +104,7 @@ namespace Schrodinger
 
                     ///Rewrite Fourier in the format of (e^(constant*n))^x,to extract portion without x
 
-                    Calc_Array[n] =Math.Exp(-img * 2 * n * Math.PI/ T);
+                    Basis_Init[n] =Math.Exp(-img * 2 * n * Math.PI/ T);
 
 
             }
@@ -120,18 +115,16 @@ namespace Schrodinger
 
         ///Finds Laplacian and adds V_0 as the last element, to define full Hamiltonian for Legendre
         
-        public double[] Hamilton_Legendre(double[] Basis_Init, double ecount)
+        public double[] Hamilton_Legendre(double[] Basis_Init, int ecount)
         {
             Basis_Temp = Basis_Init;
             Array.Reverse(Basis_Temp);
 
             for (ecount=0; ecount<Basis_Temp.Length; ecount++)
             {
-                int arrayi = Convert.ToInt32(ecount);
-
                 ///Takes derivative twice, once an array of legendre coefficients is reversed
                 
-                bicoeff[arrayi] = c* Basis_Temp[arrayi] * (bsize - 2 * arrayi) * (bsize - 2 * arrayi - 1);
+                bicoeff[ecount] = c* Basis_Temp[ecount] * (bsize - 2 * ecount) * (bsize - 2 * ecount - 1);
             }
 
             bicoeff[Basis_Temp.Length] = V_0;
@@ -143,8 +136,15 @@ namespace Schrodinger
         
         public double[] Hamilton_Fourier(double[] Basis_Init, int ecount)
         {
+ 
+            ///Loop
 
+            for (ecount = 0; ecount < Basis_Init.Length; ecount++)
+            {
+                ///i^2 yields -1, -*- => no - sign in the double derivative for Laplacian 
 
+                bicoeff[ecount] = (4 * Math.PI * Math.PI * ecount * Math.Exp(-img * 2 * ecount * Math.PI / T)) / (T * T);
+            }
 
             return bicoeff;
         }
