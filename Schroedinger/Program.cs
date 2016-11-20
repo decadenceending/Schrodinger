@@ -24,6 +24,8 @@ namespace Schrodinger
 
         double[] Basis_Init;
 
+        double[,] Basis_InitF;
+
         ///Coefficients set and V_0(x), defining the Hamiltonian
 
         double[] Basis_Temp;
@@ -44,9 +46,13 @@ namespace Schrodinger
 
         double c;
 
+        ///time
+
+        double time;
+
         ///Period
 
-        double T;
+        double T=2;
 
         double x;
 
@@ -61,6 +67,8 @@ namespace Schrodinger
         double[] bicoeff;
 
         double[] HamPsi;
+
+        double[] Calc_Array;
 
         /// Define the choice of basis set and size
 
@@ -99,7 +107,11 @@ namespace Schrodinger
 
                 for (n = 0; n < bsize; n++)
 
-                    Basis_Init[n]= Math.Exp(-img * 2 * n * Math.PI * x / T);
+                    ///Rewrite Fourier in the format of (e^(constant*n))^x,to extract portion without x
+
+                    Calc_Array[n] =Math.Exp(-img * 2 * n * Math.PI/ T);
+
+
             }
 
             
@@ -131,6 +143,9 @@ namespace Schrodinger
         
         public double[] Hamilton_Fourier(double[] Basis_Init, int ecount)
         {
+
+
+
             return bicoeff;
         }
 
@@ -139,9 +154,9 @@ namespace Schrodinger
 
         /// Define Wave Function
 
-        public double WaveFunction(double T)
+        public double WaveFunction(double time,double T)
         {
-            return Math.Sin(2*Math.PI/T);
+            return Math.Sin(2*Math.PI*time/T);
         }
 
         ///Defining array of complex numbers
@@ -152,10 +167,11 @@ namespace Schrodinger
 
             ///aicoeff =[(1 + img), (3 * img), 2, (3 + img), (5 + 3 * img), (2 + 3 * img), 7, (1 + 3 * img), (5 + img), (9 + img), (7 * img), 3, 8, (4 + 9 * img), (2 + 8 * img)];
 
-            for (int i = 0; i <= bsize;i++)
+            for (int i = 0; i < bsize;i++)
             {
-                HamPsi[i] = (Hamiltonian[i] * bicoeff[i]) * aicoeff[i];
+                HamPsi[i] = (Hamiltonian[i] * bicoeff[i]); ///* aicoeff[i];
             }
+            Basis_Temp;
             return HamPsi;
         }
             
