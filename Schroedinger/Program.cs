@@ -244,8 +244,6 @@ namespace Schrodinger
                 double[,] HamPsi_F = new SchrodingerPgm().FinalCoeffs_Fourier(bicoeff_f, Basis_Init);
             }
 
-            ///HamPsi= new SchrodingerPgm().HamiltonianCoeff()
-            
             ///Call methods to solve the eigenvalue problem and find ground state energy
         }
     }
