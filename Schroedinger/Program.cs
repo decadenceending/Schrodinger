@@ -11,7 +11,7 @@ namespace Schrodinger
     {
         ///Declare the necessary variables
 
-        ///Choice, which is determined by user input,1=legendre, 2=Fourier
+        ///Choice, which is determined by user input,1=Legendre, 2=Fourier
         
         double choice;
 
@@ -57,17 +57,17 @@ namespace Schrodinger
 
         double img = Math.Sqrt(-1);
 
-        ///Set of coefficients output by applying the laplacian
+        ///Set of coefficients output by applying Hamiltonian on Legendre
 
         double[] bicoeff;
+
+        ///Set of coefficients output by applying Hamiltonian on Fourier
 
         double[,] bicoeff_f;
 
         double[] HamPsi;
 
         double[,] HamPsi_F;
-
-        double[] Calc_Array;
 
         /// Define the choice of basis set and size
 
@@ -105,7 +105,7 @@ namespace Schrodinger
         {
             ///Assign Fourier Series as the basis set
 
-            for (n = 0; n < bsize; n++)
+            for (n = 0; n <= bsize; n++)
             {
 
                 ///Rewrite Fourier in the format of (e^(constant*n))^x,to extract portion without x
@@ -201,7 +201,7 @@ namespace Schrodinger
         {
             ///Call the methods and perform the operations to find the result
 
-            ///Prompt user to pick basis set
+            ///Prompt user to pick a basis set
 
             Console.WriteLine("Please select your basis set of choice: 1 for Legendre, 2 for Fourier:");
             double choice = Convert.ToInt32(Console.ReadLine());

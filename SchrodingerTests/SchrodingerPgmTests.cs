@@ -18,7 +18,19 @@ namespace Schrodinger.Tests
         }
 
         [TestMethod()]
-        public void DerivativeBasisTest()
+        public void BasisSet_FTest()
+        {
+            Assert.Fail();
+        }
+
+        [TestMethod()]
+        public void Hamilton_LegendreTest()
+        {
+            Assert.Fail();
+        }
+
+        [TestMethod()]
+        public void Hamilton_FourierTest()
         {
             Assert.Fail();
         }
@@ -26,17 +38,24 @@ namespace Schrodinger.Tests
         [TestMethod()]
         public void WaveFunctionTest()
         {
-            Assert.Fail();
+            ///Asses fuintionality of wave function portion
+
+            double time = 2; double T = 2; double waveampexp = 0;
+
+            double waveamp = new SchrodingerPgm().WaveFunction(time, T);
+
+            Assert.AreEqual(waveamp, waveampexp);
+
         }
 
         [TestMethod()]
-        public void HamiltonianTest()
+        public void FinalCoeffs_LegendreTest()
         {
             Assert.Fail();
         }
 
         [TestMethod()]
-        public void HamiltonianCoeffTest()
+        public void FinalCoeffs_FourierTest()
         {
             Assert.Fail();
         }
