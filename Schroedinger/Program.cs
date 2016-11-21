@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MathNet.Numerics;
+using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra.Factorization;
 
 namespace Schrodinger
 {
@@ -135,6 +138,8 @@ namespace Schrodinger
                 bicoeff[ecount] = c* Basis_Temp[ecount] * (bsize - 2 * ecount) * (bsize - 2 * ecount - 1);
             }
 
+            ///Add the last remaining V_0 since 1 term is always lost during differentiation
+
             bicoeff[Basis_Temp.Length] = V_0;
 
             return bicoeff;
@@ -154,7 +159,7 @@ namespace Schrodinger
             {
                 ///i^2 yields -1, -*- => no - sign in the double derivative for Laplacian 
 
-                //bicoeff_f[ecount,ecount] = c*(4 * Math.PI * Math.PI * ecount *ecount* Math.Exp(-img * 2 * ecount * Math.PI / T)) / (T * T)+V_0;
+                bicoeff_f[ecount,ecount] = c*(4 * Math.PI * Math.PI * ecount *ecount* Math.Exp(-img * 2 * ecount * Math.PI / T)) / (T * T)+V_0;
             }
 
             return bicoeff_f;
@@ -196,6 +201,13 @@ namespace Schrodinger
             return HamPsi_F;
         }
             
+
+        public double[] EigenSolution()
+        {
+            return;
+        }
+
+
 
         static void Main(string[] args)
         {

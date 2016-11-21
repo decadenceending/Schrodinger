@@ -21,5 +21,8 @@ be directly modified inside the code.
 
 TO DO:
 
+-Full use of complex numbers, primarily i
+-Use Legendre and Fourier with domain component, not just coefficients
+
 
  
