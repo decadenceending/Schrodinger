@@ -165,9 +165,6 @@ namespace Schrodinger
             return bicoeff_f;
         }
 
-
-
-
         /// Define Wave Function
 
         public double WaveFunction(double time,double T)
