@@ -18,4 +18,8 @@ The program can be ran using IDE such as Visual Studio 2015. User can input desi
  size of basis set. Additional paremeters can be defined, including constants such as c, V_0 and Period. These parameters can
 be directly modified inside the code.
 
+
+TO DO:
+
+
  
