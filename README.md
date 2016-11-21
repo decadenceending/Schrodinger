@@ -14,9 +14,9 @@ set of user defined coefficicent, which includes complex numbers.
 
 Executing the Code:
 
-The program can be ran using IDE such as Visual Studio 2015. User can input desired parameters such as choice of function and
- size of basis set. Additional paremeters can be defined, including constants such as c, V_0 and Period. These parameters can
-be directly modified inside the code.
+The program can be ran using IDE such as Visual Studio 2015. The program coomes with Math.NET package used to linear algebra programs.
+User can input desired parameters such as choice of function and size of basis set. Additional paremeters can be defined, including 
+constants such as c, V_0 and Period. These parameters can be directly modified inside the code.
 
 
 TO DO:
