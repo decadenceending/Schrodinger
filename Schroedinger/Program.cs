@@ -15,14 +15,14 @@ namespace Schrodinger
         ///Declare the necessary variables
 
         ///Choice, which is determined by user input,1=Legendre, 2=Fourier
-        
+
         double choice;
 
         ///Number of terms for a Legendre Polynomial or Fourier Series, determined by user input
 
         int bsize;
 
-        ///Result of selecting Legendre polynomial and assigning a coefficient set, 
+        ///Result of selecting Legendre polynomial and assigning a coefficient set,
         ///corresponding to the selected number of terms
 
         double[] Basis_Init;
@@ -115,13 +115,13 @@ namespace Schrodinger
 
                 Basis_Init[n] =Math.Exp(-img * 2 * n * Math.PI/ T);
             }
-        
+
             return Basis_Init;
 
         }
 
         ///Finds Laplacian and adds V_0 as the last element, to define full Hamiltonian for Legendre
-        
+
         public double[,] Hamilton_Legendre(int bsize,double[] Basis_Init)
         {
             ///Reverse the array to make it more friendly for finding double derivative, for the chosen method
@@ -134,7 +134,7 @@ namespace Schrodinger
             for (ecount=0; ecount<Basis_Temp.Length; ecount++)
             {
                 ///Takes derivative twice, once an array of legendre coefficients is reversed
-                
+
                 bicoeff[ecount,ecount] = c* Basis_Temp[ecount] * (bsize - 2 * ecount) * (bsize - 2 * ecount - 1);
             }
 
@@ -147,17 +147,17 @@ namespace Schrodinger
 
         ///Finds Laplacian and adds V_0 as the last element, to define full Hamiltonian for Fourier
         ///Multiplication for Fourier differs than Legendre, and therefore V_0 can be attached to every element in the matrix
-        
+
         public double[,] Hamilton_Fourier(double[] Basis_Init)
         {
- 
+
             double[,] bicoeff_f=new double[Basis_Init.Length, Basis_Init.Length];
-            
+
             ///Loop to define the full diagonal Hamiltonian Operator Matrix
-        
+
             for (ecount = 0; ecount < Basis_Init.Length; ecount++)
             {
-                ///i^2 yields -1, -*- => no - sign in the double derivative for Laplacian 
+                ///i^2 yields -1, -*- => no - sign in the double derivative for Laplacian
 
                 bicoeff_f[ecount,ecount] = c*(4 * Math.PI * Math.PI * ecount *ecount* Math.Exp(-img * 2 * ecount * Math.PI / T)) / (T * T)+V_0;
             }
@@ -173,9 +173,9 @@ namespace Schrodinger
         }
 
         ///Define multiplication of Operated on Coeff's (bicoeff) and the Initial Coeff's (Basis_Init), for Legendre
-        
 
-        public double[,] FinalCoeffs_Legendre(double[,] bicoeff, double[] Basis_Init)
+
+        public double[,] FinalCoeffs_Legendre(double[,] bicoeff, double[] Basis_Temp)
         {
 
             ///Defining array of complex numbers
@@ -183,7 +183,7 @@ namespace Schrodinger
 
             for (int i = 0; i <= Basis_Init.Length; i++)
             {
-                HamPsi[i,i] = (Basis_Init[i] * bicoeff[i,i]); ///* aicoeff[i];
+                HamPsi[i,i] = (Basis_Temp[i] * bicoeff[i,i]); ///* aicoeff[i];
             }
             ///Basis_Temp;
             return HamPsi;
@@ -200,9 +200,9 @@ namespace Schrodinger
 
             return HamPsi_F;
         }
-         
-        
-        ///Define method to solve eigenvalue problem for Legendre, using Math.NET package and its linear algebra capabilities  
+
+
+        ///Define method to solve eigenvalue problem for Legendre, using Math.NET package and its linear algebra capabilities
 
         public Vector<double>[] EigenSolution_Legendre(double[,]HamPsi)
         {
@@ -258,7 +258,7 @@ namespace Schrodinger
             if (choice==1)
             {
                 ///Call Legendre Methods
-                
+
                 double[] Basis_Init= new SchrodingerPgm().BasisSet(bsize);
                 double[,] bicoeff = new SchrodingerPgm().Hamilton_Legendre(bsize,Basis_Init);
                 double[,] HamPsi = new SchrodingerPgm().FinalCoeffs_Legendre(bicoeff, Basis_Init);
@@ -271,14 +271,14 @@ namespace Schrodinger
             else if (choice==2)
             {
                 ///Call Fourier Methods
-                
+
                 double[] Basis_Init = new SchrodingerPgm().BasisSet_F(bsize);
                 double[,] bicoeff_f = new SchrodingerPgm().Hamilton_Fourier(Basis_Init);
                 double[,] HamPsi_F = new SchrodingerPgm().FinalCoeffs_Fourier(bicoeff_f, Basis_Init);
                 Vector<double>[] nullspace = new SchrodingerPgm().EigenSolution_Fourier(HamPsi_F);
 
                 ///Return the smallest value in nullspace vector to obtain minimum eigen value, which is also ground state energy
-                
+
                 Console.WriteLine(nullspace.Min());
             }
         }
