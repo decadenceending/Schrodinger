@@ -122,7 +122,7 @@ namespace Schrodinger
 
         ///Finds Laplacian and adds V_0 as the last element, to define full Hamiltonian for Legendre
 
-        public double[,] Hamilton_Legendre(int bsize,double[] Basis_Init)
+        public double[,] Hamilton_Legendre(int bsize,double[] Basis_Init, double V_0)
         {
             ///Reverse the array to make it more friendly for finding double derivative, for the chosen method
 
@@ -148,7 +148,7 @@ namespace Schrodinger
         ///Finds Laplacian and adds V_0 as the last element, to define full Hamiltonian for Fourier
         ///Multiplication for Fourier differs than Legendre, and therefore V_0 can be attached to every element in the matrix
 
-        public double[,] Hamilton_Fourier(double[] Basis_Init)
+        public double[,] Hamilton_Fourier(double[] Basis_Init, double V_0)
         {
 
             double[,] bicoeff_f=new double[Basis_Init.Length, Basis_Init.Length];
@@ -175,7 +175,7 @@ namespace Schrodinger
         ///Define multiplication of Operated on Coeff's (bicoeff) and the Initial Coeff's (Basis_Init), for Legendre
 
 
-        public double[,] FinalCoeffs_Legendre(double[,] bicoeff, double[] Basis_Temp)
+        public double[,] FinalCoeffs_Legendre(double[,]bicoeff, double[] Basis_Temp)
         {
 
             ///Defining array of complex numbers
@@ -260,7 +260,7 @@ namespace Schrodinger
                 ///Call Legendre Methods
 
                 double[] Basis_Init= new SchrodingerPgm().BasisSet(bsize);
-                double[,] bicoeff = new SchrodingerPgm().Hamilton_Legendre(bsize,Basis_Init);
+                double[,] bicoeff = new SchrodingerPgm().Hamilton_Legendre(bsize,Basis_Init,V_0);
                 double[,] HamPsi = new SchrodingerPgm().FinalCoeffs_Legendre(bicoeff, Basis_Init);
                 Vector<double>[] nullspace = new SchrodingerPgm().EigenSolution_Legendre(HamPsi);
 
@@ -273,7 +273,7 @@ namespace Schrodinger
                 ///Call Fourier Methods
 
                 double[] Basis_Init = new SchrodingerPgm().BasisSet_F(bsize);
-                double[,] bicoeff_f = new SchrodingerPgm().Hamilton_Fourier(Basis_Init);
+                double[,] bicoeff_f = new SchrodingerPgm().Hamilton_Fourier(Basis_Init,V_0);
                 double[,] HamPsi_F = new SchrodingerPgm().FinalCoeffs_Fourier(bicoeff_f, Basis_Init);
                 Vector<double>[] nullspace = new SchrodingerPgm().EigenSolution_Fourier(HamPsi_F);
 
