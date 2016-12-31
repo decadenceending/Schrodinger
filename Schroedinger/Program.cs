@@ -35,11 +35,6 @@ namespace Schrodinger
 
         int ecount;
 
-
-        /// Define the potential energy V_0
-
-        double V_0 = 3;
-
         /// Define c the constant
 
         double c=1;
@@ -169,7 +164,7 @@ namespace Schrodinger
 
         public double WaveFunction(double time,double T)
         {
-            return Math.Sin(2*Math.PI*time/T);
+            return Math.Sin((2*Math.PI*time)/T);
         }
 
         ///Define multiplication of Operated on Coeff's (bicoeff) and the Initial Coeff's (Basis_Init), for Legendre
@@ -204,44 +199,15 @@ namespace Schrodinger
 
         ///Define method to solve eigenvalue problem for Legendre, using Math.NET package and its linear algebra capabilities
 
-        public Vector<double>[] EigenSolution_Legendre(double[,]HamPsi)
-        {
-
-            ///Utilize Ham_Psi, the result of Ham applied on Psi and multiplied by Psi, Legendre
-
-            var A = Matrix<double>.Build.Dense(bsize+1,bsize+1);
-
-            A.DenseOfMatrix(HamPsi);
-
-            ///Command to find the actual eigen values in a vector "nullspace"
-
-            Vector<double>[] nullspace = A.Kernel();
-
-            return nullspace;
-        }
-
-
-        public Vector<double>[] EigenSolution_Fourier(double[,] Ham_Psi_F)
-        {
-
-            ///Utilize Ham_Psi_F, the result of Ham applied on Psi and multiplied by Psi, Fourier
-
-            var A = Matrix<double>.Build.Dense(bsize + 1, bsize + 1);
-
-            A.DenseOfMatrix(HamPsi_F);
-
-            ///Command to find the actual eigen values in a vector "nullspace"
-
-            Vector<double>[] nullspace = A.Kernel();
-
-            return nullspace;
-        }
+        
 
         static void Main(string[] args)
         {
             ///Call the methods and perform the operations to find the result
 
             ///Prompt user to pick a basis set
+
+            double V_0 = 1;
 
             Console.WriteLine("Please select your basis set of choice: 1 for Legendre, 2 for Fourier:");
             double choice = Convert.ToInt32(Console.ReadLine());
@@ -262,11 +228,11 @@ namespace Schrodinger
                 double[] Basis_Init= new SchrodingerPgm().BasisSet(bsize);
                 double[,] bicoeff = new SchrodingerPgm().Hamilton_Legendre(bsize,Basis_Init,V_0);
                 double[,] HamPsi = new SchrodingerPgm().FinalCoeffs_Legendre(bicoeff, Basis_Init);
-                Vector<double>[] nullspace = new SchrodingerPgm().EigenSolution_Legendre(HamPsi);
+                ///Vector<double>[] nullspace = new SchrodingerPgm().EigenSolution_Legendre(HamPsi);
 
                 ///Return the smallest value in nullspace vector to obtain minimum eigen value, which is also ground state energy
 
-                Console.WriteLine(nullspace.Min());
+                ///Console.WriteLine(nullspace.Min());
             }
             else if (choice==2)
             {
@@ -275,11 +241,11 @@ namespace Schrodinger
                 double[] Basis_Init = new SchrodingerPgm().BasisSet_F(bsize);
                 double[,] bicoeff_f = new SchrodingerPgm().Hamilton_Fourier(Basis_Init,V_0);
                 double[,] HamPsi_F = new SchrodingerPgm().FinalCoeffs_Fourier(bicoeff_f, Basis_Init);
-                Vector<double>[] nullspace = new SchrodingerPgm().EigenSolution_Fourier(HamPsi_F);
+                ///Vector<double>[] nullspace = new SchrodingerPgm().EigenSolution_Fourier(HamPsi_F);
 
                 ///Return the smallest value in nullspace vector to obtain minimum eigen value, which is also ground state energy
 
-                Console.WriteLine(nullspace.Min());
+                ///Console.WriteLine(nullspace.Min());
             }
         }
     }
