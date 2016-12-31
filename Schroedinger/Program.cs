@@ -43,8 +43,6 @@ namespace Schrodinger
 
         double time;
 
-
-
         double x;
 
         int n;
