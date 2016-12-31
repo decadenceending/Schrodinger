@@ -43,9 +43,7 @@ namespace Schrodinger
 
         double time;
 
-        ///Period
 
-        double T=2;
 
         double x;
 
@@ -53,11 +51,7 @@ namespace Schrodinger
 
         ///Define the imaginary number
 
-        double img = Math.Sqrt(-1);
-
-        ///Set of coefficients output by applying Hamiltonian on Legendre
-
-        double[,] bicoeff;
+        double img = 1; ///Math.Sqrt(-1);
 
         ///Set of coefficients output by applying Hamiltonian on Fourier
 
@@ -98,9 +92,11 @@ namespace Schrodinger
             return Basis_Init;
         }
 
-        public double[] BasisSet_F(int bsize)
+        public double[] BasisSet_F(int bsize, double T, double img)
 
         {
+            double[] Basis_Init = new double[bsize+1];
+
             ///Assign Fourier Series as the basis set
 
             for (n = 0; n <= bsize; n++)
@@ -108,7 +104,7 @@ namespace Schrodinger
 
                 ///Rewrite Fourier in the format of (e^(constant*n))^x,to extract portion without x
 
-                Basis_Init[n] =Math.Exp(-img * 2 * n * Math.PI/ T);
+                Basis_Init[n] = Math.Exp(-img * 2 * n * Math.PI) / T;
             }
 
             return Basis_Init;
@@ -122,11 +118,16 @@ namespace Schrodinger
             ///Reverse the array to make it more friendly for finding double derivative, for the chosen method
 
             Basis_Temp = Basis_Init;
+
             Array.Reverse(Basis_Temp);
+
+            int rowcoeff = Basis_Temp.GetLength(0)+1;;
+
+            double[,] bicoeff = new double[rowcoeff, rowcoeff];
 
             ///Loop to define the full Hamiltonian Operator array
 
-            for (ecount=0; ecount<Basis_Temp.Length; ecount++)
+            for (ecount=0; ecount<Basis_Temp.GetLength(0); ecount++)
             {
                 ///Takes derivative twice, once an array of legendre coefficients is reversed
 
@@ -135,7 +136,7 @@ namespace Schrodinger
 
             ///Add the last remaining V_0 since 1 term is always lost during differentiation
 
-            bicoeff[Basis_Temp.Length, Basis_Temp.Length] = V_0;
+            bicoeff[Basis_Temp.GetLength(0), Basis_Temp.GetLength(0)] = V_0;
 
             return bicoeff;
         }
@@ -143,10 +144,10 @@ namespace Schrodinger
         ///Finds Laplacian and adds V_0 as the last element, to define full Hamiltonian for Fourier
         ///Multiplication for Fourier differs than Legendre, and therefore V_0 can be attached to every element in the matrix
 
-        public double[,] Hamilton_Fourier(double[] Basis_Init, double V_0)
+        public double[,] Hamilton_Fourier(double[] Basis_Init, double V_0,double T)
         {
 
-            double[,] bicoeff_f=new double[Basis_Init.Length, Basis_Init.Length];
+            double[,] bicoeff_f=new double[Basis_Init.GetLength(0), Basis_Init.GetLength(0)];
 
             ///Loop to define the full diagonal Hamiltonian Operator Matrix
 
@@ -172,11 +173,12 @@ namespace Schrodinger
 
         public double[,] FinalCoeffs_Legendre(double[,]bicoeff, double[] Basis_Temp)
         {
+            double[,] HamPsi = new double[Basis_Temp.GetLength(0), Basis_Temp.GetLength(0)];
 
             ///Defining array of complex numbers
             ///aicoeff =[(1 + img), (3 * img), 2, (3 + img), (5 + 3 * img), (2 + 3 * img), 7, (1 + 3 * img), (5 + img), (9 + img), (7 * img), 3, 8, (4 + 9 * img), (2 + 8 * img)];
 
-            for (int i = 0; i <= Basis_Init.Length; i++)
+            for (int i = 0; i < Basis_Temp.GetLength(0); i++)
             {
                 HamPsi[i,i] = (Basis_Temp[i] * bicoeff[i,i]); ///* aicoeff[i];
             }
@@ -188,7 +190,9 @@ namespace Schrodinger
 
         public double [,] FinalCoeffs_Fourier(double[,] bicoeff_f, double[] Basis_Init )
         {
-            for (int i = 0; i <= Basis_Init.Length; i++)
+            double[,] HamPsi_F = new double[Basis_Init.GetLength(0), Basis_Init.GetLength(0)];
+
+            for (int i = 0; i < Basis_Init.Length; i++)
             {
                 HamPsi_F[i,i] = (Basis_Init[i] * bicoeff_f[i,i]); ///* aicoeff[i];
             }
@@ -196,10 +200,43 @@ namespace Schrodinger
             return HamPsi_F;
         }
 
-
         ///Define method to solve eigenvalue problem for Legendre, using Math.NET package and its linear algebra capabilities
 
-        
+        public Vector<double>[] EigenSolution_Legendre(double[,] HamPsi)
+
+        {
+
+            ///Utilize Ham_Psi, the result of Ham applied on Psi and multiplied by Psi, Legendre
+
+            var A = Matrix<double>.Build.Dense(bsize + 1, bsize + 1);
+
+            A.DenseOfMatrix(HamPsi);
+
+            ///Command to find the actual eigen values in a vector "nullspace"
+
+            Vector<double>[] nullspace = A.Kernel();
+
+            return nullspace;
+
+        }
+
+        public Vector<double>[] EigenSolution_Fourier(double[,] Ham_Psi_F)
+
+        {
+
+            ///Utilize Ham_Psi_F, the result of Ham applied on Psi and multiplied by Psi, Fourier
+
+            var A = Matrix<double>.Build.Dense(bsize + 1, bsize + 1);
+
+            A.DenseOfMatrix(HamPsi_F);
+
+            ///Command to find the actual eigen values in a vector "nullspace"
+
+            Vector<double>[] nullspace = A.Kernel();
+
+            return nullspace;
+
+        }
 
         static void Main(string[] args)
         {
@@ -208,6 +245,8 @@ namespace Schrodinger
             ///Prompt user to pick a basis set
 
             double V_0 = 1;
+            double T = 2;
+            double img = 2;
 
             Console.WriteLine("Please select your basis set of choice: 1 for Legendre, 2 for Fourier:");
             double choice = Convert.ToInt32(Console.ReadLine());
@@ -228,7 +267,8 @@ namespace Schrodinger
                 double[] Basis_Init= new SchrodingerPgm().BasisSet(bsize);
                 double[,] bicoeff = new SchrodingerPgm().Hamilton_Legendre(bsize,Basis_Init,V_0);
                 double[,] HamPsi = new SchrodingerPgm().FinalCoeffs_Legendre(bicoeff, Basis_Init);
-                ///Vector<double>[] nullspace = new SchrodingerPgm().EigenSolution_Legendre(HamPsi);
+
+                Vector<double>[] nullspace = new SchrodingerPgm().EigenSolution_Legendre(HamPsi);
 
                 ///Return the smallest value in nullspace vector to obtain minimum eigen value, which is also ground state energy
 
@@ -238,10 +278,11 @@ namespace Schrodinger
             {
                 ///Call Fourier Methods
 
-                double[] Basis_Init = new SchrodingerPgm().BasisSet_F(bsize);
-                double[,] bicoeff_f = new SchrodingerPgm().Hamilton_Fourier(Basis_Init,V_0);
+                double[] Basis_Init = new SchrodingerPgm().BasisSet_F(bsize,T,img);
+                double[,] bicoeff_f = new SchrodingerPgm().Hamilton_Fourier(Basis_Init,V_0,T);
                 double[,] HamPsi_F = new SchrodingerPgm().FinalCoeffs_Fourier(bicoeff_f, Basis_Init);
-                ///Vector<double>[] nullspace = new SchrodingerPgm().EigenSolution_Fourier(HamPsi_F);
+
+                Vector<double>[] nullspace = new SchrodingerPgm().EigenSolution_Fourier(HamPsi_F);
 
                 ///Return the smallest value in nullspace vector to obtain minimum eigen value, which is also ground state energy
 

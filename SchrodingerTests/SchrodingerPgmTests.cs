@@ -54,11 +54,11 @@ namespace Schrodinger.Tests
         [TestMethod()]
         public void BasisSet_FTest()
         {
-          double T=2; int n=2;int bsize=2; double Basis_Init_Exp=3;
+          double T=2; int bsize=2; double Basis_Init_Exp=3; double img = 2;
 
           bool Expected=true;bool Actual;
 
-          double[] Basis_Init = new SchrodingerPgm().BasisSet_F(bsize);
+          double[] Basis_Init = new SchrodingerPgm().BasisSet_F(bsize,T,img);
 
           if (Basis_Init.Length==Basis_Init_Exp)
           {
@@ -76,19 +76,28 @@ namespace Schrodinger.Tests
         {
             int bsize = 2; double[] Basis_Init = { -1, 3 }; double V_0 = 1;
 
+            int sizeExp = 3;
+
             double [,]bicoeff= new SchrodingerPgm().Hamilton_Legendre(bsize,Basis_Init, V_0);
 
-          Assert.Fail();
+            int sizeAct = bicoeff.GetLength(0);
+
+          Assert.AreEqual(sizeAct,sizeExp);
+
         }
 
         [TestMethod()]
         public void Hamilton_FourierTest()
         {
-            double[] Basis_Init = { -1, 3 }; double V_0 = 1;
+            double[] Basis_Init = { -1, 3 }; double V_0 = 1; double T = 2;
 
-            double [,]bicoeff_f= new SchrodingerPgm().Hamilton_Fourier(Basis_Init,V_0);
+            int sizeExp = 2;
 
-          Assert.Fail();
+            double [,]bicoeff_f= new SchrodingerPgm().Hamilton_Fourier(Basis_Init,V_0,T);
+
+            int sizeAct = bicoeff_f.GetLength(0);
+
+          Assert.AreEqual(sizeAct,sizeExp);
         }
 
         [TestMethod()]
@@ -99,7 +108,7 @@ namespace Schrodinger.Tests
 
           double waveamp = new SchrodingerPgm().WaveFunction(time, T);
 
-          Assert.AreEqual(waveamp, waveampexp);
+          Assert.AreEqual(waveamp, waveampexp, 0.0001);
 
         }
 
@@ -114,7 +123,7 @@ namespace Schrodinger.Tests
 
           double[,]HamPsi= new SchrodingerPgm().FinalCoeffs_Legendre(bicoeff,Basis_Temp);
 
-          if (HamPsi[1,1]==HamPsi_Exp[1,1] && HamPsi[2,2]==HamPsi_Exp[2,2] && HamPsi[3,3]==HamPsi_Exp[3,3])
+          if (HamPsi[0,0]==HamPsi_Exp[0,0] && HamPsi[1,1]==HamPsi_Exp[1,1] && HamPsi[2,2]==HamPsi_Exp[2,2])
           {
             Actual=true;
           }
@@ -138,7 +147,7 @@ namespace Schrodinger.Tests
 
           double[,]HamPsi_F= new SchrodingerPgm().FinalCoeffs_Fourier(bicoeff_f,Basis_Init);
 
-          if (HamPsi_F[1,1]==HamPsi_F_Exp[1,1] && HamPsi_F[2,2]==HamPsi_F_Exp[2,2] && HamPsi_F[3,3]==HamPsi_F_Exp[3,3])
+          if (HamPsi_F[0, 0] == HamPsi_F_Exp[0, 0] && HamPsi_F[1, 1] == HamPsi_F_Exp[1, 1] && HamPsi_F[2, 2] == HamPsi_F_Exp[2, 2])
           {
             Actual=true;
           }
